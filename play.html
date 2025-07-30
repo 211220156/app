@@ -8,10 +8,75 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .status-bar { height:44px; background:#fff; display:flex; justify-content:space-between; align-items:center; padding:0 20px; font-size:14px; color:#222; border-bottom:1px solid #f0f0f0;}
-    .tab-bar { height:83px; background:#fff; border-top:1px solid #f0f0f0; display:flex; justify-content:space-around; align-items:center; position:absolute; bottom:0; left:0; right:0;}
+    .tab-bar { height:83px; background:#fff; border-top:1px solid #f0f0f0; display:flex; justify-content:space-around; align-items:center; position:fixed; bottom:0; left:0; right:0; z-index:1000;}
     .tab-item { display:flex; flex-direction:column; align-items:center; color:#888; font-size:12px;}
     .tab-item.active { color:#222;}
     .tab-item i { font-size:22px; margin-bottom:2px;}
+    /* 半浮层样式 */
+    .share-modal-bg {
+      position: fixed;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.25);
+      z-index: 2000;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .share-modal {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 390px;
+      padding: 32px 24px 24px 24px;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.08);
+      position: relative;
+      animation: slideUp .25s;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%);}
+      to { transform: translateY(0);}
+    }
+    .share-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: #f3f4f6;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+    }
+    .share-icons {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 16px;
+    }
+    .share-icon-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #555;
+      font-size: 14px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .share-icon-btn i {
+      font-size: 32px;
+      margin-bottom: 6px;
+    }
+    .share-icon-btn.wx { color: #1AAD19; }
+    .share-icon-btn.qq { color: #50B5FF; }
+    .share-icon-btn.shequ { color: #FFB300; }
+    /* 防止内容被tab-bar遮挡 */
+    .pb-safe { padding-bottom: 100px; }
   </style>
 </head>
 <body class="bg-[#f8f8f8] text-gray-900 h-full relative">
@@ -25,7 +90,7 @@
     </div>
   </div>
   <!-- 内容 -->
-  <div class="pt-14 pb-24 px-5 flex flex-col items-center">
+  <div class="pt-14 pb-safe px-5 flex flex-col items-center">
     <!-- 封面 -->
     <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" class="w-60 h-60 rounded-2xl object-cover mb-6 shadow">
     <!-- 标题与作者 -->
@@ -46,15 +111,29 @@
     <!-- 播放控件 -->
     <div class="flex items-center justify-center my-6 gap-8">
       <button class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-blue-500 text-xl"><i class="fas fa-backward"></i></button>
-      <button class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl shadow-lg"><i class="fas fa-pause"></i></button>
+      <button id="mainPlayBtn" class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl shadow-lg focus:outline-none">
+        <i id="mainPlayIcon" class="fas fa-pause"></i>
+      </button>
       <button class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-blue-500 text-xl"><i class="fas fa-forward"></i></button>
     </div>
     <!-- 操作按钮 -->
     <div class="flex justify-center gap-8 mb-8">
-      <button class="flex flex-col items-center text-gray-500"><i class="far fa-heart text-2xl mb-1"></i><span class="text-xs">喜欢</span></button>
-      <button class="flex flex-col items-center text-gray-500"><i class="far fa-comment text-2xl mb-1"></i><span class="text-xs">评论</span></button>
-      <button class="flex flex-col items-center text-gray-500"><i class="fas fa-download text-2xl mb-1"></i><span class="text-xs">下载</span></button>
-      <button class="flex flex-col items-center text-gray-500"><i class="fas fa-share-alt text-2xl mb-1"></i><span class="text-xs">分享</span></button>
+      <button id="likeBtn" class="flex flex-col items-center text-gray-500 focus:outline-none">
+        <i id="likeIcon" class="far fa-heart text-2xl mb-1"></i>
+        <span class="text-xs">喜欢</span>
+      </button>
+      <button class="flex flex-col items-center text-gray-500 focus:outline-none">
+        <i class="far fa-comment text-2xl mb-1"></i>
+        <span class="text-xs">评论</span>
+      </button>
+      <button class="flex flex-col items-center text-gray-500 focus:outline-none">
+        <i class="fas fa-download text-2xl mb-1"></i>
+        <span class="text-xs">下载</span>
+      </button>
+      <button id="shareBtn" class="flex flex-col items-center text-gray-500 focus:outline-none">
+        <i class="fas fa-share-alt text-2xl mb-1"></i>
+        <span class="text-xs">分享</span>
+      </button>
     </div>
     <!-- 播放列表 -->
     <div class="w-full bg-white rounded-xl shadow p-4">
@@ -77,8 +156,20 @@
       </div>
     </div>
   </div>
+  <!-- 分享半浮层 -->
+  <div id="shareModal" class="share-modal-bg" style="display:none;">
+    <div class="share-modal">
+      <button class="share-close-btn" id="closeShareModal" title="关闭"><i class="fas fa-times"></i></button>
+      <div class="text-center font-semibold text-lg mb-2">分享到</div>
+      <div class="share-icons">
+        <button class="share-icon-btn wx"><i class="fab fa-weixin"></i><span>微信</span></button>
+        <button class="share-icon-btn qq"><i class="fab fa-qq"></i><span>QQ</span></button>
+        <button class="share-icon-btn shequ"><i class="fas fa-users"></i><span>社区</span></button>
+      </div>
+    </div>
+  </div>
   <!-- 底部导航栏 -->
-  <div class="tab-bar" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;">
+  <div class="tab-bar">
     <div class="tab-item">
       <i class="fas fa-plus-circle"></i>
       <span>生成</span>
@@ -96,5 +187,52 @@
       <span>我的</span>
     </div>
   </div>
+  <script>
+    // 播放/暂停切换
+    const mainPlayBtn = document.getElementById('mainPlayBtn');
+    const mainPlayIcon = document.getElementById('mainPlayIcon');
+    let isPlaying = false;
+    mainPlayBtn.addEventListener('click', function() {
+      isPlaying = !isPlaying;
+      mainPlayIcon.className = isPlaying ? 'fas fa-play' : 'fas fa-pause';
+    });
+
+    // 喜欢按钮切换
+    const likeBtn = document.getElementById('likeBtn');
+    const likeIcon = document.getElementById('likeIcon');
+    let liked = false;
+    likeBtn.addEventListener('click', function() {
+      liked = !liked;
+      if (liked) {
+        likeIcon.classList.remove('far');
+        likeIcon.classList.add('fas');
+        likeIcon.classList.add('text-red-500');
+      } else {
+        likeIcon.classList.remove('fas');
+        likeIcon.classList.remove('text-red-500');
+        likeIcon.classList.add('far');
+      }
+    });
+
+    // 分享半浮层
+    const shareBtn = document.getElementById('shareBtn');
+    const shareModal = document.getElementById('shareModal');
+    const closeShareModal = document.getElementById('closeShareModal');
+    shareBtn.addEventListener('click', function() {
+      shareModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    });
+    closeShareModal.addEventListener('click', function() {
+      shareModal.style.display = 'none';
+      document.body.style.overflow = '';
+    });
+    // 点击遮罩关闭
+    shareModal.addEventListener('click', function(e) {
+      if (e.target === shareModal) {
+        shareModal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
 </body>
 </html>
