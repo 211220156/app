@@ -12,6 +12,75 @@
     .tab-item { display:flex; flex-direction:column; align-items:center; color:#888; font-size:12px;}
     .tab-item.active { color:#222;}
     .tab-item i { font-size:22px; margin-bottom:2px;}
+    .follow-btn {
+      background: #f3f4f6;
+      color: #4f8cff;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 4px 14px 4px 8px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      border: none;
+      outline: none;
+      transition: background 0.2s;
+    }
+    .follow-btn i {
+      font-size: 14px;
+      margin-right: 2px;
+    }
+    .card-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 144px;
+      margin-bottom: 12px;
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+    }
+    .play-icon-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      background: rgba(255,255,255,0.85);
+      color: #4f8cff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-size: 20px;
+      transition: background 0.2s;
+      border: none;
+      outline: none;
+    }
+    .play-icon-btn:hover {
+      background: #e6f0ff;
+    }
+    .card-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .card-header-left {
+      display: flex;
+      align-items: center;
+    }
+    .card-header-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .card-header-info .font-semibold {
+      line-height: 1.1;
+    }
   </style>
 </head>
 <body class="bg-[#f8f8f8] text-gray-900 h-full relative">
@@ -35,16 +104,20 @@
     <!-- 社区内容列表 -->
     <div class="space-y-5">
       <!-- 卡片1 -->
-      <div class="bg-white rounded-xl shadow p-4 flex flex-col">
-        <div class="flex items-center mb-3">
-          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=80&h=80&q=80" class="w-10 h-10 rounded-full mr-3">
-          <div>
-            <div class="font-semibold text-gray-900">白噪声达人</div>
-            <div class="text-xs text-gray-400">2小时前</div>
+      <div class="bg-white rounded-xl shadow p-4 flex flex-col relative">
+        <div class="card-header-row">
+          <div class="card-header-left">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=80&h=80&q=80" class="w-10 h-10 rounded-full mr-3">
+            <div class="card-header-info">
+              <div class="font-semibold text-gray-900">白噪声达人</div>
+              <div class="text-xs text-gray-400">2小时前</div>
+            </div>
           </div>
+          <button class="follow-btn"><i class="fas fa-plus"></i>关注</button>
         </div>
-        <div class="mb-3">
-          <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80" class="w-full h-36 object-cover rounded-lg">
+        <div class="card-img-wrap">
+          <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80" alt="森林雨声">
+          <button class="play-icon-btn" title="播放"><i class="fas fa-play"></i></button>
         </div>
         <div class="font-bold text-base mb-1">森林雨声</div>
         <div class="text-sm text-gray-500 mb-3">沉浸在大自然的雨声中，助眠放松。</div>
@@ -55,16 +128,20 @@
         </div>
       </div>
       <!-- 卡片2 -->
-      <div class="bg-white rounded-xl shadow p-4 flex flex-col">
-        <div class="flex items-center mb-3">
-          <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=80&h=80&q=80" class="w-10 h-10 rounded-full mr-3">
-          <div>
-            <div class="font-semibold text-gray-900">治愈声音</div>
-            <div class="text-xs text-gray-400">5小时前</div>
+      <div class="bg-white rounded-xl shadow p-4 flex flex-col relative">
+        <div class="card-header-row">
+          <div class="card-header-left">
+            <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=80&h=80&q=80" class="w-10 h-10 rounded-full mr-3">
+            <div class="card-header-info">
+              <div class="font-semibold text-gray-900">治愈声音</div>
+              <div class="text-xs text-gray-400">5小时前</div>
+            </div>
           </div>
+          <button class="follow-btn"><i class="fas fa-plus"></i>关注</button>
         </div>
-        <div class="mb-3">
-          <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3c5c?auto=format&fit=crop&w=600&q=80" class="w-full h-36 object-cover rounded-lg">
+        <div class="card-img-wrap">
+          <img src="https://pic.616pic.com/bg_w1180/00/06/72/8mBRMZjWmw.jpg!/fw/1120" alt="海浪白噪声">
+          <button class="play-icon-btn" title="播放"><i class="fas fa-play"></i></button>
         </div>
         <div class="font-bold text-base mb-1">海浪白噪声</div>
         <div class="text-sm text-gray-500 mb-3">仿佛置身海边，舒缓压力。</div>

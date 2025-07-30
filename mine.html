@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>我的</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .status-bar { height:44px; background:#fff; display:flex; justify-content:space-between; align-items:center; padding:0 20px; font-size:14px; color:#222; border-bottom:1px solid #f0f0f0;}
+    .tab-bar { height:83px; background:#fff; border-top:1px solid #f0f0f0; display:flex; justify-content:space-around; align-items:center; position:absolute; bottom:0; left:0; right:0;}
+    .tab-item { display:flex; flex-direction:column; align-items:center; color:#888; font-size:12px;}
+    .tab-item.active { color:#222;}
+    .tab-item i { font-size:22px; margin-bottom:2px;}
+    .menu-list .menu-item:not(:last-child) { border-bottom: 1px solid #f0f0f0; }
+    .menu-item { display:flex; align-items:center; padding:18px 0; }
+    .menu-icon { width:36px; height:36px; background:#f3f4f6; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:18px; margin-right:16px; color:#4f8cff;}
+    .menu-title { font-size:16px; font-weight:500; }
+    .menu-desc { font-size:12px; color:#888; margin-left:8px;}
+    .menu-arrow { margin-left:auto; color:#bbb; }
+    .msg-btn { background:#f3f4f6; color:#4f8cff; border-radius:12px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-size:18px; margin-left:12px;}
+  </style>
+</head>
+<body class="bg-[#f8f8f8] text-gray-900 h-full relative">
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <div>
+      <i class="fas fa-signal mr-2"></i>
+      <i class="fas fa-wifi mr-2"></i>
+      <i class="fas fa-battery-full"></i>
+    </div>
+  </div>
+  <!-- 内容 -->
+  <div class="pt-14 pb-24 px-5">
+    <!-- 个人信息 -->
+    <div class="flex items-center mb-6">
+      <img src="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=80&h=80&q=80" class="w-16 h-16 rounded-full mr-4">
+      <div>
+        <div class="text-lg font-bold">治愈声音</div>
+        <div class="text-sm text-gray-500">白噪声爱好者</div>
+      </div>
+      <button class="ml-auto bg-gray-200 text-gray-700 rounded-xl px-4 py-2 text-sm font-semibold">编辑资料</button>
+      <button class="msg-btn" title="私信">
+        <i class="fas fa-envelope"></i>
+      </button>
+    </div>
+    <!-- 统计 -->
+    <div class="flex justify-around mb-6">
+      <div class="text-center">
+        <div class="text-lg font-bold">128</div>
+        <div class="text-xs text-gray-500">关注</div>
+      </div>
+      <div class="text-center">
+        <div class="text-lg font-bold">2.3K</div>
+        <div class="text-xs text-gray-500">粉丝</div>
+      </div>
+      <div class="text-center">
+        <div class="text-lg font-bold"><i class="fas fa-envelope"></i></div>
+        <div class="text-xs text-gray-500">私信</div>
+      </div>
+    </div>
+    <!-- 简介 -->
+    <div class="bg-white rounded-xl shadow p-4 mb-6">
+      <div class="font-semibold mb-2">个人简介</div>
+      <div class="text-sm text-gray-700">喜欢用声音治愈生活，专注白噪声创作与分享。</div>
+    </div>
+    <!-- 菜单模块 -->
+    <div class="bg-white rounded-xl shadow p-2 menu-list">
+      <div class="menu-item">
+        <div class="menu-icon"><i class="fas fa-heart"></i></div>
+        <span class="menu-title">我的喜欢</span>
+        <span class="menu-desc">收藏的白噪声</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="menu-item">
+        <div class="menu-icon"><i class="fas fa-download"></i></div>
+        <span class="menu-title">已下载</span>
+        <span class="menu-desc">离线收听</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="menu-item">
+        <div class="menu-icon"><i class="fas fa-history"></i></div>
+        <span class="menu-title">最近播放</span>
+        <span class="menu-desc">浏览足迹</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="menu-item">
+        <div class="menu-icon"><i class="fas fa-cog"></i></div>
+        <span class="menu-title">设置</span>
+        <i class="fas fa-chevron-right menu-arrow"></i>
+      </div>
+      <div class="menu-item">
+        <div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div>
+        <span class="menu-title text-red-500">退出登录</span>
+      </div>
+    </div>
+  </div>
+  <!-- 底部导航栏 -->
+  <div class="tab-bar">
+    <div class="tab-item">
+      <i class="fas fa-plus-circle"></i>
+      <span>生成</span>
+    </div>
+    <div class="tab-item">
+      <i class="fas fa-compass"></i>
+      <span>社区</span>
+    </div>
+    <div class="tab-item">
+      <i class="fas fa-play-circle"></i>
+      <span>播放</span>
+    </div>
+    <div class="tab-item active">
+      <i class="fas fa-user"></i>
+      <span>我的</span>
+    </div>
+  </div>
+</body>
+</html>
