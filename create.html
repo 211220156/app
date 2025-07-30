@@ -158,14 +158,6 @@
     .global-section {
       margin-bottom: 1rem;
     }
-    .bg-white.rounded-2xl.shadow.p-6.mb-6.border.border-blue-100 {
-      background: linear-gradient(135deg, #f8fafc 80%, #e0e7ff 100%);
-      border-radius: 1.5rem;
-      border: 1.5px solid #e0e7ff;
-      box-shadow: 0 6px 32px 0 rgba(59,130,246,0.10);
-      padding: 1.1rem 1rem 1rem 1rem !important;
-      margin-bottom: 1.1rem !important;
-    }
     /* 操作按钮优化 */
     .main-action-btn {
       border-radius: 9999px;
@@ -275,13 +267,64 @@
       background: linear-gradient(90deg, #6366f1 0%, #3b82f6 100%);
       color: #fff;
       border-color: #6366f1;
-      box-shadow: 0 4px 16px 0 rgba(99,102,241,0.18);
+      box-shadow: 0 4px 16px 0 rgba(99,102,241,0.18), 0 0 0 2px rgba(99,102,241,0.1);
       z-index: 1;
+      transform: translateY(-1px);
     }
     .track-tab:not(.active):hover {
       background: #e0e7ff;
       color: #3b82f6;
       border-color: #a5b4fc;
+    }
+    /* 音轨卡片与tab的视觉关联 */
+    .track-card {
+      border-radius: 1.5rem;
+      box-shadow: 0 6px 32px 0 rgba(59,130,246,0.10);
+      border: 1.5px solid #e0e7ff;
+      margin-bottom: 1.1rem;
+      background: linear-gradient(135deg, #f8fafc 80%, #e0e7ff 100%);
+      padding: 1.1rem 1rem 1rem 1rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .track-card::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: var(--arrow-left, 50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid #e0e7ff;
+      opacity: 0;
+      transition: left 0.3s ease, opacity 0.3s ease;
+      transform: translateX(-50%);
+    }
+    .track-card.active {
+      border-color: #6366f1;
+      box-shadow: 0 6px 32px 0 rgba(99,102,241,0.15), 0 0 0 2px rgba(99,102,241,0.1);
+      background: linear-gradient(135deg, #f8fafc 80%, #e0e7ff 100%);
+    }
+    .track-card.active::before {
+      opacity: 1;
+      border-bottom-color: #6366f1;
+    }
+    /* tab切换动画 */
+    #track-tabs {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      position: relative;
+    }
+    #track-tabs::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #e0e7ff 0%, #a5b4fc 50%, #e0e7ff 100%);
+      border-radius: 1px;
     }
     .hide-scrollbar {
       scrollbar-width: none;
@@ -340,7 +383,7 @@
       <!-- JS生成音轨卡片 -->
     </div>
     <!-- 全局调控区 -->
-    <div class="bg-white rounded-2xl shadow p-6 mb-6 border border-blue-100">
+    <div class="global-controls-simple mb-6" style="padding: 1.1rem 0 1rem 0;">
       <div class="global-section mb-4">
         <div class="global-section-title">节拍(BPM)</div>
         <div class="flex items-center gap-3 radio-group">
@@ -449,9 +492,32 @@ function renderTrackTabs() {
       currentTrack = idx;
       renderTrackTabs();
       renderTrackCards();
+      // 延迟更新箭头位置，确保DOM完全渲染后再计算位置
+      setTimeout(updateArrowPosition, 50);
     };
     tabBar.appendChild(tab);
   });
+}
+
+function updateArrowPosition() {
+  const activeTab = document.querySelector('.track-tab.active');
+  const activeCard = document.querySelector('.track-card.active');
+  
+  if (activeTab && activeCard) {
+    const tabRect = activeTab.getBoundingClientRect();
+    const cardRect = activeCard.getBoundingClientRect();
+    
+    // 计算tab的中心位置相对于卡片的位置
+    const tabCenter = tabRect.left + tabRect.width / 2;
+    const cardLeft = cardRect.left;
+    const arrowLeft = tabCenter - cardLeft;
+    
+    // 设置小箭头的位置，确保有动画效果
+    activeCard.style.setProperty('--arrow-left', arrowLeft + 'px');
+    
+    // 强制触发重绘以确保动画生效
+    activeCard.offsetHeight;
+  }
 }
 
 function renderTrackCards() {
@@ -460,7 +526,7 @@ function renderTrackCards() {
   const track = tracks[currentTrack];
   // 只渲染当前音轨卡片
   const card = document.createElement('div');
-  card.className = 'track-card';
+  card.className = 'track-card active';
   card.innerHTML = `
     <div class="flex items-center track-header">
       <span class="track-title flex-1">${track.name}</span>
@@ -496,7 +562,7 @@ function renderTrackCards() {
       <button class="play-btn bg-blue-500 hover:bg-blue-600 text-white rounded-full px-6 py-2 flex items-center gap-2 shadow">
         <i class="fas fa-play"></i> <span>播放</span>
       </button>
-      <audio class="audio-player" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12c6fa0b7b.mp3"></audio>
+      <audio class="audio-player" src=""></audio>
     </div>
   `;
   list.appendChild(card);
@@ -529,8 +595,11 @@ function renderTrackCards() {
     currentTrack = Math.min(currentTrack, tracks.length - 1); // 确保currentTrack不越界
     renderTrackTabs(); // 重新渲染音轨标签
     renderTrackCards(); // 重新渲染音轨卡片
+    updateArrowPosition(); // 更新箭头位置
   };
   updateRadioGroupHighlight();
+  // 延迟更新箭头位置，确保DOM已渲染
+  setTimeout(updateArrowPosition, 50);
 }
 
 // 录音按钮逻辑
@@ -551,6 +620,8 @@ recordBtn.onclick = function() {
 document.addEventListener('DOMContentLoaded', function() {
   renderTrackTabs();
   renderTrackCards();
+  // 初始化时更新箭头位置
+  setTimeout(updateArrowPosition, 100);
 });
 </script>
 </html>
