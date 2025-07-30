@@ -455,6 +455,14 @@ function renderTrackCards() {
     playBtn.querySelector('span').textContent = '播放';
     playing = false;
   };
+  // 删除按钮逻辑
+  const deleteBtn = card.querySelector('.delete-btn');
+  deleteBtn.onclick = function() {
+    tracks.splice(currentTrack, 1); // 删除当前音轨
+    currentTrack = Math.min(currentTrack, tracks.length - 1); // 确保currentTrack不越界
+    renderTrackTabs(); // 重新渲染音轨标签
+    renderTrackCards(); // 重新渲染音轨卡片
+  };
   updateRadioGroupHighlight();
 }
 document.addEventListener('DOMContentLoaded', function() {
