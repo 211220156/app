@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .status-bar { height:44px; background:#fff; display:flex; justify-content:space-between; align-items:center; padding:0 20px; font-size:14px; color:#222; border-bottom:1px solid #f0f0f0;}
-    .tab-bar { height:83px; background:#fff; border-top:1px solid #f0f0f0; display:flex; justify-content:space-around; align-items:center; position:absolute; bottom:0; left:0; right:0;}
-    .tab-item { display:flex; flex-direction:column; align-items:center; color:#888; font-size:12px;}
+    .tab-bar { height:83px; background:#fff; border-top:1px solid #f0f0f0; display:flex; justify-content:space-around; align-items:center; position:fixed; bottom:0; left:0; right:0; z-index:1000;}
+    .tab-item { display:flex; flex-direction:column; align-items:center; color:#888; font-size:12px; cursor:pointer;}
     .tab-item.active { color:#222;}
     .tab-item i { font-size:22px; margin-bottom:2px;}
     .follow-btn {
@@ -81,6 +81,87 @@
     .card-header-info .font-semibold {
       line-height: 1.1;
     }
+    /* MiniBar样式 */
+    .minibar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 83px;
+      z-index: 1100;
+      background: #fff;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      padding: 10px 18px 10px 12px;
+      height: 62px;
+      transition: box-shadow 0.2s;
+    }
+    .minibar-img {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-right: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .minibar-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .minibar-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+    .minibar-sub {
+      font-size: 12px;
+      color: #888;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .minibar-progress-bg {
+      width: 100%;
+      height: 4px;
+      background: #f0f0f0;
+      border-radius: 2px;
+      margin-top: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    .minibar-progress-bar {
+      height: 100%;
+      background: #4f8cff;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .minibar-playbtn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #f3f4f6;
+      color: #4f8cff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border: none;
+      outline: none;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .minibar-playbtn:hover {
+      background: #e6f0ff;
+    }
   </style>
 </head>
 <body class="bg-[#f8f8f8] text-gray-900 h-full relative">
@@ -93,6 +174,27 @@
       <i class="fas fa-battery-full"></i>
     </div>
   </div>
+  <!-- MiniBar 播放栏 -->
+  <div class="minibar" id="minibar">
+    <img class="minibar-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="cover">
+    <div class="minibar-info">
+      <div class="minibar-title">森林雨声</div>
+      <div class="minibar-sub">白噪声达人</div>
+      <div class="minibar-progress-bg">
+        <div class="minibar-progress-bar" id="minibarProgress"></div>
+      </div>
+    </div>
+    <!-- 操作按钮组，保证间距一致 -->
+    <div class="flex items-center ml-4 gap-2">
+      <button class="minibar-playbtn" title="播放列表" style="background:#f3f4f6;">
+      <i class="fas fa-list"></i>
+    </button>
+      <button class="minibar-playbtn" id="minibarLikeBtn" title="收藏" style="background:#f3f4f6;">
+      <i id="minibarLikeIcon" class="far fa-heart"></i>
+    </button>
+    <button class="minibar-playbtn" id="minibarPlayBtn"><i id="minibarPlayIcon" class="fas fa-pause"></i></button>
+  </div>
+    </div>
   <!-- 内容 -->
   <div class="pt-14 pb-24 px-5">
     <h2 class="text-xl font-bold mb-4">白噪声社区</h2>
@@ -135,8 +237,8 @@
             <div class="card-header-info">
               <div class="font-semibold text-gray-900">治愈声音</div>
               <div class="text-xs text-gray-400">5小时前</div>
-            </div>
           </div>
+  </div>
           <button class="follow-btn"><i class="fas fa-plus"></i>关注</button>
         </div>
         <div class="card-img-wrap">
@@ -149,28 +251,75 @@
           <button class="flex items-center"><i class="far fa-heart mr-1"></i> 98</button>
           <button class="flex items-center"><i class="far fa-comment mr-1"></i> 12</button>
           <button class="flex items-center"><i class="fas fa-download mr-1"></i> 下载</button>
-        </div>
-      </div>
+    </div>
     </div>
   </div>
+  </div>
   <!-- 底部导航栏 -->
-  <div class="tab-bar" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;">
-    <div class="tab-item">
+  <div class="tab-bar">
+    <div class="tab-item" onclick="parent.document.getElementById('mainFrame').src='create.html'">
       <i class="fas fa-plus-circle"></i>
       <span>生成</span>
     </div>
-    <div class="tab-item active">
+    <div class="tab-item active" onclick="parent.document.getElementById('mainFrame').src='community.html'">
       <i class="fas fa-compass"></i>
       <span>社区</span>
     </div>
-    <div class="tab-item">
+    <div class="tab-item" onclick="parent.document.getElementById('mainFrame').src='play.html'">
       <i class="fas fa-play-circle"></i>
       <span>播放</span>
     </div>
-    <div class="tab-item">
+    <div class="tab-item" onclick="parent.document.getElementById('mainFrame').src='mine.html'">
       <i class="fas fa-user"></i>
       <span>我的</span>
     </div>
   </div>
+  <script>
+    // MiniBar播放按钮切换
+    const minibarPlayBtn = document.getElementById('minibarPlayBtn');
+    const minibarPlayIcon = document.getElementById('minibarPlayIcon');
+    const minibarProgress = document.getElementById('minibarProgress');
+    let minibarPlaying = true;
+    let minibarProgressValue = 0;
+    let minibarInterval = null;
+
+    function updateMinibarProgress() {
+      minibarProgress.style.width = minibarProgressValue + "%";
+    }
+
+    function startMinibarProgress() {
+      if (minibarInterval) return;
+      minibarInterval = setInterval(() => {
+        if (minibarPlaying) {
+          minibarProgressValue += 0.3;
+          if (minibarProgressValue > 100) minibarProgressValue = 0;
+          updateMinibarProgress();
+        }
+      }, 100);
+    }
+
+    minibarPlayBtn.addEventListener('click', function() {
+      minibarPlaying = !minibarPlaying;
+      minibarPlayIcon.className = minibarPlaying ? 'fas fa-pause' : 'fas fa-play';
+    });
+
+    // 爱心收藏切换
+    const minibarLikeBtn = document.getElementById('minibarLikeBtn');
+    const minibarLikeIcon = document.getElementById('minibarLikeIcon');
+    let minibarLiked = false;
+    minibarLikeBtn.addEventListener('click', function() {
+      minibarLiked = !minibarLiked;
+      if (minibarLiked) {
+        minibarLikeIcon.classList.remove('far');
+        minibarLikeIcon.classList.add('fas', 'text-red-500');
+      } else {
+        minibarLikeIcon.classList.remove('fas', 'text-red-500');
+        minibarLikeIcon.classList.add('far');
+      }
+    });
+
+    // 启动进度条动画
+    startMinibarProgress();
+  </script>
 </body>
 </html>
