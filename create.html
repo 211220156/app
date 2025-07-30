@@ -179,6 +179,68 @@
     .main-action-btn.bg-gray-200:hover { background: #e5e7eb; }
     .main-action-btn.bg-green-500:hover { background: #059669; }
     .main-action-btn.bg-red-100:hover { background: #fecaca; color: #b91c1c; }
+    /* 超酷炫生成按钮 */
+    .generate-btn {
+      width: 100%;
+      padding: 1.2rem 2rem;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+      background-size: 300% 300%;
+      border: none;
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .generate-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.2);
+      background-position: 100% 100%;
+    }
+    .generate-btn:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+    .generate-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+    .generate-btn:hover::before {
+      left: 100%;
+    }
+    .generate-btn .icon {
+      display: inline-block;
+      margin-right: 0.8rem;
+      font-size: 1.4rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .generate-btn:hover .icon {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .generate-btn .text {
+      display: inline-block;
+      position: relative;
+      z-index: 1;
+    }
     /* 横向tab栏美化 */
     #track-tabs {
       scrollbar-width: none;
@@ -306,13 +368,12 @@
       </div>
     </div>
     <!-- 操作按钮（试听/保存/发布/删除）和底部导航栏保持不变 -->
-    <div class="flex gap-3 mb-4">
-      <button class="flex-1 main-action-btn bg-blue-500 text-white"><i class="fas fa-play mr-2"></i>试听</button>
-      <button class="flex-1 main-action-btn bg-gray-200 text-gray-700"><i class="fas fa-save mr-2"></i>保存</button>
-    </div>
-    <div class="flex gap-3">
-      <button class="flex-1 main-action-btn bg-green-500 text-white"><i class="fas fa-upload mr-2"></i>发布</button>
-      <button class="flex-1 main-action-btn bg-red-100 text-red-500"><i class="fas fa-trash mr-2"></i>删除</button>
+    <!-- 超酷炫生成按钮 -->
+    <div class="mb-6">
+      <button class="generate-btn">
+        <i class="fas fa-magic icon"></i>
+        <span class="text">生成</span>
+      </button>
     </div>
   </div>
   <!-- 底部导航栏 -->
