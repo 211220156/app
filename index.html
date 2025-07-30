@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>白噪声录音App原型</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      background: #f8f8f8;
+      margin: 24px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #f8f8f8;
+      border-radius: 40px;
+    }
+    @media (max-width: 1200px) {
+      .phone-frame { margin: 12px; }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center">
+  <h1 class="text-2xl font-bold mt-6 mb-4 text-gray-800">白噪声录音App原型（小宇宙风格）</h1>
+  <div class="flex flex-wrap justify-center">
+    <div class="phone-frame"><iframe src="create.html"></iframe></div>
+    <div class="phone-frame"><iframe src="community.html"></iframe></div>
+    <div class="phone-frame"><iframe src="play.html"></iframe></div>
+  </div>
+</body>
+</html>

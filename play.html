@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>播放白噪声</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .status-bar { height:44px; background:#fff; display:flex; justify-content:space-between; align-items:center; padding:0 20px; font-size:14px; color:#222; border-bottom:1px solid #f0f0f0;}
+    .tab-bar { height:83px; background:#fff; border-top:1px solid #f0f0f0; display:flex; justify-content:space-around; align-items:center; position:absolute; bottom:0; left:0; right:0;}
+    .tab-item { display:flex; flex-direction:column; align-items:center; color:#888; font-size:12px;}
+    .tab-item.active { color:#222;}
+    .tab-item i { font-size:22px; margin-bottom:2px;}
+  </style>
+</head>
+<body class="bg-[#f8f8f8] text-gray-900 h-full relative">
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <div>
+      <i class="fas fa-signal mr-2"></i>
+      <i class="fas fa-wifi mr-2"></i>
+      <i class="fas fa-battery-full"></i>
+    </div>
+  </div>
+  <!-- 内容 -->
+  <div class="pt-14 pb-24 px-5 flex flex-col items-center">
+    <!-- 封面 -->
+    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" class="w-60 h-60 rounded-2xl object-cover mb-6 shadow">
+    <!-- 标题与作者 -->
+    <div class="text-center mb-4">
+      <div class="text-xl font-bold mb-1">森林雨声</div>
+      <div class="text-sm text-gray-500">白噪声达人</div>
+    </div>
+    <!-- 进度条 -->
+    <div class="w-full mb-2">
+      <div class="flex justify-between text-xs text-gray-400 mb-1">
+        <span>01:23</span>
+        <span>30:00</span>
+      </div>
+      <div class="w-full h-2 bg-gray-200 rounded-full relative">
+        <div class="h-2 bg-blue-400 rounded-full" style="width: 20%"></div>
+      </div>
+    </div>
+    <!-- 播放控件 -->
+    <div class="flex items-center justify-center my-6 gap-8">
+      <button class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-blue-500 text-xl"><i class="fas fa-backward"></i></button>
+      <button class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl shadow-lg"><i class="fas fa-pause"></i></button>
+      <button class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-blue-500 text-xl"><i class="fas fa-forward"></i></button>
+    </div>
+    <!-- 操作按钮 -->
+    <div class="flex justify-center gap-8 mb-8">
+      <button class="flex flex-col items-center text-gray-500"><i class="far fa-heart text-2xl mb-1"></i><span class="text-xs">喜欢</span></button>
+      <button class="flex flex-col items-center text-gray-500"><i class="far fa-comment text-2xl mb-1"></i><span class="text-xs">评论</span></button>
+      <button class="flex flex-col items-center text-gray-500"><i class="fas fa-download text-2xl mb-1"></i><span class="text-xs">下载</span></button>
+      <button class="flex flex-col items-center text-gray-500"><i class="fas fa-share-alt text-2xl mb-1"></i><span class="text-xs">分享</span></button>
+    </div>
+    <!-- 播放列表 -->
+    <div class="w-full bg-white rounded-xl shadow p-4">
+      <div class="font-semibold mb-3">播放列表</div>
+      <div class="flex items-center py-2 border-b border-gray-100">
+        <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=80&q=80" class="w-10 h-10 rounded-lg mr-3">
+        <div class="flex-1">
+          <div class="font-medium text-sm">海浪白噪声</div>
+          <div class="text-xs text-gray-400">治愈声音 · 25:00</div>
+        </div>
+        <i class="fas fa-play text-blue-400"></i>
+      </div>
+      <div class="flex items-center py-2">
+        <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3c5c?auto=format&fit=crop&w=80&q=80" class="w-10 h-10 rounded-lg mr-3">
+        <div class="flex-1">
+          <div class="font-medium text-sm">风声白噪声</div>
+          <div class="text-xs text-gray-400">自然之声 · 18:00</div>
+        </div>
+        <i class="fas fa-play text-blue-400"></i>
+      </div>
+    </div>
+  </div>
+  <!-- 底部导航栏 -->
+  <div class="tab-bar">
+    <div class="tab-item">
+      <i class="fas fa-plus-circle"></i>
+      <span>生成</span>
+    </div>
+    <div class="tab-item">
+      <i class="fas fa-compass"></i>
+      <span>社区</span>
+    </div>
+    <div class="tab-item active">
+      <i class="fas fa-play-circle"></i>
+      <span>播放</span>
+    </div>
+    <div class="tab-item">
+      <i class="fas fa-user"></i>
+      <span>我的</span>
+    </div>
+  </div>
+</body>
+</html>

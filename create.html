@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>生成白噪声</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .status-bar { height:44px; background:#fff; display:flex; justify-content:space-between; align-items:center; padding:0 20px; font-size:14px; color:#222; border-bottom:1px solid #f0f0f0;}
+    .tab-bar { height:83px; background:#fff; border-top:1px solid #f0f0f0; display:flex; justify-content:space-around; align-items:center; position:absolute; bottom:0; left:0; right:0;}
+    .tab-item { display:flex; flex-direction:column; align-items:center; color:#888; font-size:12px;}
+    .tab-item.active { color:#222;}
+    .tab-item i { font-size:22px; margin-bottom:2px;}
+    .audio-wave { display:flex; align-items:flex-end; height:32px; gap:2px;}
+    .wave-bar { width:4px; background:#a3bffa; border-radius:2px; animation:wave 1.2s infinite ease-in-out;}
+    .wave-bar:nth-child(2) { animation-delay:0.2s;}
+    .wave-bar:nth-child(3) { animation-delay:0.4s;}
+    .wave-bar:nth-child(4) { animation-delay:0.6s;}
+    .wave-bar:nth-child(5) { animation-delay:0.8s;}
+    @keyframes wave { 0%,100%{height:8px;} 50%{height:28px;} }
+    /* Switch美化 */
+    .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #e5e7eb; transition: .4s; border-radius: 9999px; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    input:checked + .slider { background-color: #3b82f6; }
+    input:checked + .slider:before { transform: translateX(18px); }
+    /* 单选按钮组美化（修正版） */
+    .radio-group label {
+      cursor:pointer;
+      padding: 0.25rem 1.2rem;
+      border-radius: 9999px;
+      border: 1.5px solid #e5e7eb;
+      margin-right: 0.5rem;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      background: #f9fafb;
+      color: #374151;
+      display: inline-block;
+      font-weight: 500;
+      position: relative;
+      min-width: 72px;
+      white-space: nowrap;
+      max-width: 140px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      vertical-align: middle;
+    }
+    .radio-group input[type="radio"] {
+      display: none;
+    }
+    .radio-group input[type="radio"]:checked + span,
+    .radio-group label.selected {
+      background: #3b82f6 !important;
+      color: #fff !important;
+      border-color: #3b82f6 !important;
+      box-shadow: 0 2px 8px 0 rgba(59,130,246,0.08);
+    }
+    .radio-group label span {
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    /* 自定义输入框美化 */
+    .bpm-custom-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 1.2rem;
+    }
+    .bpm-custom-label {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-right: 0.2rem;
+      white-space: nowrap;
+    }
+    .bpm-custom-input {
+      border-radius: 9999px;
+      border: 1.5px solid #3b82f6;
+      padding: 0.35rem 1.1rem;
+      width: 70px;
+      font-size: 0.98rem;
+      outline: none;
+      box-shadow: 0 1px 4px 0 rgba(59,130,246,0.07);
+      transition: border 0.2s;
+    }
+    .bpm-custom-input:focus {
+      border-color: #2563eb;
+    }
+    .bpm-custom-input::placeholder {
+      color: #b6c3d1;
+      font-size: 0.95rem;
+    }
+    /* 主音轨Switch对齐优化 */
+    .main-track-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      height: 38px;
+      margin-top: 0.5rem;
+    }
+    .main-track-label {
+      font-size: 0.95rem;
+      color: #2563eb;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 0;
+    }
+    /* 卡片和全局区进一步美化 */
+    .track-card {
+      border-radius: 1.5rem;
+      box-shadow: 0 6px 32px 0 rgba(59,130,246,0.10);
+      border: 1.5px solid #e0e7ff;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #f8fafc 80%, #e0e7ff 100%);
+      padding: 1.7rem 1.3rem 1.3rem 1.3rem;
+    }
+    .track-card .track-header {
+      border-bottom: 1px solid #e0e7ff;
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.6rem;
+    }
+    .track-card .track-title {
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #1e293b;
+    }
+    .track-card .delete-btn {
+      color: #ef4444;
+      font-size: 1rem;
+      border-radius: 9999px;
+      padding: 0.2rem 0.8rem;
+      background: #fef2f2;
+      transition: background 0.2s;
+    }
+    .track-card .delete-btn:hover {
+      background: #fee2e2;
+    }
+    .track-card .track-controls { gap: 2rem; }
+    .track-card .track-controls > div { min-width: 130px; }
+    .global-section-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.7rem;
+      color: #2563eb;
+      letter-spacing: 0.01em;
+    }
+    .global-section {
+      margin-bottom: 2rem;
+    }
+    .bg-white.rounded-2xl.shadow.p-6.mb-6.border.border-blue-100 {
+      background: linear-gradient(135deg, #f8fafc 80%, #e0e7ff 100%);
+      border-radius: 1.5rem;
+      border: 1.5px solid #e0e7ff;
+      box-shadow: 0 6px 32px 0 rgba(59,130,246,0.10);
+    }
+    /* 操作按钮优化 */
+    .main-action-btn {
+      border-radius: 9999px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 0.9rem 0;
+      box-shadow: 0 2px 8px 0 rgba(59,130,246,0.08);
+      transition: background 0.2s, color 0.2s;
+    }
+    .main-action-btn.bg-blue-500:hover { background: #2563eb; }
+    .main-action-btn.bg-gray-200:hover { background: #e5e7eb; }
+    .main-action-btn.bg-green-500:hover { background: #059669; }
+    .main-action-btn.bg-red-100:hover { background: #fecaca; color: #b91c1c; }
+  </style>
+</head>
+<body class="bg-[#f8f8f8] text-gray-900 h-full relative">
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <div>
+      <i class="fas fa-signal mr-2"></i>
+      <i class="fas fa-wifi mr-2"></i>
+      <i class="fas fa-battery-full"></i>
+    </div>
+  </div>
+  <!-- 内容 -->
+  <div class="pt-14 pb-24 px-5">
+    <h2 class="text-xl font-bold mb-4">生成白噪声</h2>
+    <!-- 录音/导入/素材箱 -->
+    <div class="flex gap-4 mb-6">
+      <button class="flex-1 bg-white rounded-xl shadow px-4 py-3 flex flex-col items-center">
+        <i class="fas fa-microphone text-blue-500 text-2xl mb-1"></i>
+        <span class="text-xs text-gray-700">录音</span>
+      </button>
+      <button class="flex-1 bg-white rounded-xl shadow px-4 py-3 flex flex-col items-center">
+        <i class="fas fa-upload text-green-500 text-2xl mb-1"></i>
+        <span class="text-xs text-gray-700">导入</span>
+      </button>
+      <button class="flex-1 bg-white rounded-xl shadow px-4 py-3 flex flex-col items-center">
+        <i class="fas fa-box-open text-yellow-500 text-2xl mb-1"></i>
+        <span class="text-xs text-gray-700">素材箱</span>
+      </button>
+    </div>
+    <!-- 音轨列表（示例2条，可后续用JS动态生成） -->
+    <div id="track-list" class="mb-6">
+      <div class="track-card">
+        <div class="flex items-center track-header">
+          <span class="track-title flex-1">音轨1</span>
+          <button class="delete-btn flex items-center"><i class="fas fa-trash"></i> 删除</button>
+        </div>
+        <div class="flex flex-wrap track-controls mb-2">
+          <!-- 声道 -->
+          <div>
+            <div class="text-xs text-gray-500 mb-1">声道</div>
+            <div class="radio-group flex">
+              <label><input type="radio" name="channel1" value="center" checked><span>居中</span></label>
+              <label><input type="radio" name="channel1" value="left"><span>居左</span></label>
+              <label><input type="radio" name="channel1" value="right"><span>居右</span></label>
+            </div>
+          </div>
+          <!-- 频率 -->
+          <div>
+            <div class="text-xs text-gray-500 mb-1">频率</div>
+            <div class="radio-group flex">
+              <label><input type="radio" name="freq1" value="auto" checked><span>智能</span></label>
+              <label><input type="radio" name="freq1" value="high"><span>高频</span></label>
+              <label><input type="radio" name="freq1" value="mid"><span>中频</span></label>
+              <label><input type="radio" name="freq1" value="low"><span>低频</span></label>
+            </div>
+          </div>
+          <!-- 主音轨 -->
+          <div class="main-track-row">
+            <span class="main-track-label">作为主音轨</span>
+            <label class="switch">
+              <input type="checkbox" id="main1">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="track-card">
+        <div class="flex items-center track-header">
+          <span class="track-title flex-1">音轨2</span>
+          <button class="delete-btn flex items-center"><i class="fas fa-trash"></i> 删除</button>
+        </div>
+        <div class="flex flex-wrap track-controls mb-2">
+          <!-- 声道 -->
+          <div>
+            <div class="text-xs text-gray-500 mb-1">声道</div>
+            <div class="radio-group flex">
+              <label><input type="radio" name="channel2" value="center" checked><span>居中</span></label>
+              <label><input type="radio" name="channel2" value="left"><span>居左</span></label>
+              <label><input type="radio" name="channel2" value="right"><span>居右</span></label>
+            </div>
+          </div>
+          <!-- 频率 -->
+          <div>
+            <div class="text-xs text-gray-500 mb-1">频率</div>
+            <div class="radio-group flex">
+              <label><input type="radio" name="freq2" value="auto" checked><span>智能</span></label>
+              <label><input type="radio" name="freq2" value="high"><span>高频</span></label>
+              <label><input type="radio" name="freq2" value="mid"><span>中频</span></label>
+              <label><input type="radio" name="freq2" value="low"><span>低频</span></label>
+            </div>
+          </div>
+          <!-- 主音轨 -->
+          <div class="main-track-row">
+            <span class="main-track-label">作为主音轨</span>
+            <label class="switch">
+              <input type="checkbox" id="main2">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 全局调控区 -->
+    <div class="bg-white rounded-2xl shadow p-6 mb-6 border border-blue-100">
+      <div class="global-section mb-4">
+        <div class="global-section-title">节拍数</div>
+        <div class="flex items-center gap-3 radio-group">
+          <label><input type="radio" name="bpm" value="auto" checked><span>智能</span></label>
+          <div class="bpm-custom-wrap">
+            <span class="bpm-custom-label">自定义</span>
+            <input type="number" min="1" max="300" class="bpm-custom-input" placeholder="数值">
+          </div>
+        </div>
+      </div>
+      <div class="global-section mb-4">
+        <div class="global-section-title">场景</div>
+        <div class="flex gap-3 radio-group">
+          <label><input type="radio" name="scene" value="sleep" checked><span>助眠</span></label>
+          <label><input type="radio" name="scene" value="study"><span>学习</span></label>
+          <label><input type="radio" name="scene" value="meditate"><span>冥想</span></label>
+        </div>
+      </div>
+      <div class="global-section mb-4">
+        <div class="global-section-title">模版</div>
+        <div class="flex gap-3 radio-group">
+          <label><input type="radio" name="template" value="rain" checked><span>雨夜书房</span></label>
+          <label><input type="radio" name="template" value="forest"><span>清晨森林</span></label>
+          <label><input type="radio" name="template" value="field"><span>夏日田野</span></label>
+        </div>
+      </div>
+      <div class="global-section">
+        <div class="global-section-title">疗愈分类</div>
+        <div class="flex gap-3 radio-group">
+          <label><input type="radio" name="category" value="white" checked><span>白噪音</span></label>
+          <label><input type="radio" name="category" value="asmr"><span>ASMR</span></label>
+          <label><input type="radio" name="category" value="brain"><span>轻音脑波</span></label>
+        </div>
+      </div>
+    </div>
+    <!-- 操作按钮（试听/保存/发布/删除）和底部导航栏保持不变 -->
+    <div class="flex gap-3 mb-4">
+      <button class="flex-1 main-action-btn bg-blue-500 text-white"><i class="fas fa-play mr-2"></i>试听</button>
+      <button class="flex-1 main-action-btn bg-gray-200 text-gray-700"><i class="fas fa-save mr-2"></i>保存</button>
+    </div>
+    <div class="flex gap-3">
+      <button class="flex-1 main-action-btn bg-green-500 text-white"><i class="fas fa-upload mr-2"></i>发布</button>
+      <button class="flex-1 main-action-btn bg-red-100 text-red-500"><i class="fas fa-trash mr-2"></i>删除</button>
+    </div>
+  </div>
+  <!-- 底部导航栏 -->
+  <div class="tab-bar">
+    <div class="tab-item active">
+      <i class="fas fa-plus-circle"></i>
+      <span>生成</span>
+    </div>
+    <div class="tab-item">
+      <i class="fas fa-compass"></i>
+      <span>社区</span>
+    </div>
+    <div class="tab-item">
+      <i class="fas fa-play-circle"></i>
+      <span>播放</span>
+    </div>
+    <div class="tab-item">
+      <i class="fas fa-user"></i>
+      <span>我的</span>
+    </div>
+  </div>
+</body>
+<script>
+// 选中高亮修复：为所有 radio-group 自动加 selected 类
+function updateRadioGroupHighlight() {
+  document.querySelectorAll('.radio-group').forEach(group => {
+    group.querySelectorAll('label').forEach(label => {
+      const input = label.querySelector('input[type="radio"]');
+      if (input && input.checked) {
+        label.classList.add('selected');
+      } else {
+        label.classList.remove('selected');
+      }
+    });
+  });
+}
+document.addEventListener('change', function(e) {
+  if (e.target.matches('.radio-group input[type="radio"]')) {
+    updateRadioGroupHighlight();
+  }
+});
+document.addEventListener('DOMContentLoaded', updateRadioGroupHighlight);
+</script>
+</html>
