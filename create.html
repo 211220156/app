@@ -609,6 +609,22 @@ function renderTrackCards() {
   // 延迟更新箭头位置，确保DOM已渲染
   setTimeout(updateArrowPosition, 50);
 }
+
+// 录音按钮逻辑
+const recordBtn = document.querySelector('.fa-microphone').closest('button');
+recordBtn.onclick = function() {
+  const newTrackIndex = tracks.length + 1;
+  tracks.push({
+    name: `音轨${newTrackIndex}`,
+    channelName: `channel${newTrackIndex}`,
+    freqName: `freq${newTrackIndex}`,
+    mainId: `main${newTrackIndex}`,
+  });
+  currentTrack = tracks.length - 1; // 切换到新音轨
+  renderTrackTabs(); // 重新渲染音轨标签
+  renderTrackCards(); // 重新渲染音轨卡片
+};
+
 document.addEventListener('DOMContentLoaded', function() {
   renderTrackTabs();
   renderTrackCards();
