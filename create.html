@@ -86,7 +86,7 @@
       border-radius: 22px;
       border: 1.5px solid #3b82f6;
       padding: 0.36rem 1.1rem;
-      width: 70px;
+      width: 100px;
       font-size: 0.97rem;
       outline: none;
       box-shadow: 0 1px 4px 0 rgba(59,130,246,0.07);
@@ -99,6 +99,15 @@
     .bpm-custom-input::placeholder {
       color: #b6c3d1;
       font-size: 0.95rem;
+    }
+    .bpm-custom-input:disabled {
+      background-color: #f3f4f6;
+      border-color: #d1d5db;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+    .bpm-custom-input:disabled::placeholder {
+      color: #9ca3af;
     }
     /* 主音轨Switch对齐优化 */
     .main-track-row {
@@ -390,7 +399,7 @@
           <label><input type="radio" name="bpm" value="auto" checked><span>智能</span></label>
           <div class="bpm-custom-wrap">
             <span class="bpm-custom-label">自定义</span>
-            <input type="number" min="1" max="300" class="bpm-custom-input" placeholder="数值">
+            <input type="number" min="1" max="300" class="bpm-custom-input" placeholder="请输入">
           </div>
         </div>
       </div>
@@ -456,6 +465,19 @@ function updateRadioGroupHighlight() {
 document.addEventListener('change', function(e) {
   if (e.target.matches('.radio-group input[type="radio"]')) {
     updateRadioGroupHighlight();
+    
+    // 处理BPM输入框的启用/禁用状态
+    if (e.target.name === 'bpm') {
+      const customInput = document.querySelector('.bpm-custom-input');
+      if (customInput) {
+        if (e.target.value === 'auto') {
+          customInput.disabled = true;
+          customInput.value = '';
+        } else {
+          customInput.disabled = false;
+        }
+      }
+    }
   }
 });
 // 音轨tab和卡片动态渲染
@@ -622,6 +644,15 @@ document.addEventListener('DOMContentLoaded', function() {
   renderTrackCards();
   // 初始化时更新箭头位置
   setTimeout(updateArrowPosition, 100);
+  
+  // 初始化BPM输入框状态
+  const bpmAutoRadio = document.querySelector('input[name="bpm"][value="auto"]');
+  if (bpmAutoRadio && bpmAutoRadio.checked) {
+    const customInput = document.querySelector('.bpm-custom-input');
+    if (customInput) {
+      customInput.disabled = true;
+    }
+  }
 });
 </script>
 </html>
