@@ -162,6 +162,72 @@
     .minibar-playbtn:hover {
       background: #e6f0ff;
     }
+    /* 漂流瓶banner样式 */
+    .drift-bottle-banner {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .drift-bottle-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .drift-bottle-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80');
+      background-size: cover;
+      background-position: center;
+      filter: blur(8px);
+      opacity: 0.8;
+    }
+    .drift-bottle-overlay {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .drift-bottle-content {
+      flex: 1;
+    }
+    .drift-bottle-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+    .drift-bottle-desc {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    .drift-bottle-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .drift-bottle-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
   </style>
 </head>
 <body class="bg-[#f8f8f8] text-gray-900 h-full relative">
@@ -202,6 +268,23 @@
     <div class="flex items-center bg-white rounded-xl shadow px-4 py-2 mb-6">
       <i class="fas fa-search text-gray-400 mr-2"></i>
       <input type="text" placeholder="搜索白噪声/创作者" class="bg-transparent outline-none flex-1 text-sm">
+    </div>
+    <!-- 漂流瓶banner -->
+    <div class="drift-bottle-banner" onclick="openDriftBottle()">
+      <div class="drift-bottle-bg"></div>
+      <div class="drift-bottle-overlay">
+        <div class="drift-bottle-content">
+          <div class="drift-bottle-title">漂流瓶</div>
+          <div class="drift-bottle-desc">发现随机的白噪声作品</div>
+          <div class="drift-bottle-stats">
+            <span><i class="fas fa-users mr-1"></i>1.2K 参与</span>
+            <span><i class="fas fa-heart mr-1"></i>856 喜欢</span>
+          </div>
+        </div>
+        <div class="drift-bottle-icon">
+          <i class="fas fa-bottle-water"></i>
+        </div>
+      </div>
     </div>
     <!-- 社区内容列表 -->
     <div class="space-y-5">
@@ -320,6 +403,7 @@
 
     // 启动进度条动画
     startMinibarProgress();
+    
   </script>
 </body>
 </html>
